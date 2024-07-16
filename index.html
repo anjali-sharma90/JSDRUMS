@@ -84,7 +84,14 @@
         }
       };
 
-      document.addEventListener("keydown", playSound);
+      let width = screen.width;
+      console.log(width);
+
+      if (width < 1440) {
+        document.addEventListener("click", playSound);
+      } else {
+        document.addEventListener("keydown", playSound);
+      }
     </script>
   </body>
 </html>

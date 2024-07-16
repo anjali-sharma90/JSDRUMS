@@ -84,14 +84,27 @@
         }
       };
 
-      let width = screen.width;
-      console.log(width);
+      // screensize
+      const screenSize = function () {
+        return window.innerWidth >= 1024;
+      };
 
-      if (width < 1440) {
-        document.addEventListener("click", playSound);
-      } else {
-        document.addEventListener("keydown", playSound);
-      }
+      // Function to handle event listeners based on screen size
+      const updateEventListeners = function () {
+        if (screenSize()) {
+          document.addEventListener("keydown", playSound);
+          document.removeEventListener("click", playSound);
+        } else {
+          document.removeEventListener("keydown", playSound);
+          document.addEventListener("click", playSound);
+        }
+      };
+
+      // Initial setup of event listeners
+      updateEventListeners();
+
+      // Update event listeners on window resize
+      window.addEventListener("resize", updateEventListeners);
     </script>
   </body>
 </html>

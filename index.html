@@ -60,30 +60,55 @@
       let currentlyPlayingAudio = null;
       let currentlyPlayingKey = null;
 
-      const playSound = function (e) {
-        const sound = document.querySelector(`audio[data-key="${e.keyCode}"]`);
-        const key = document.querySelector(`[data-key="${e.keyCode}"]`);
+      const mobile = function (e) {
+        const keyEnter = e.target.closest("[data-key]");
+        const dataKey = keyEnter.getAttribute("data-key");
+        const audio = document.querySelector(`audio[data-key="${dataKey}"]`);
 
-        if (e.keyCode == `${e.keyCode}`) {
-          if (currentlyPlayingAudio && currentlyPlayingAudio !== sound) {
+        keyEnter.addEventListener("click", function (e) {
+          if (currentlyPlayingAudio && currentlyPlayingAudio !== audio) {
             currentlyPlayingAudio.pause();
             currentlyPlayingAudio.currentTime = 0;
           }
-          if (currentlyPlayingKey && currentlyPlayingKey !== key) {
+
+          if (currentlyPlayingKey && currentlyPlayingKey !== keyEnter) {
             currentlyPlayingKey.classList.remove("playing");
           }
 
-          sound.play();
-          key.classList.add("playing");
+          audio.play();
+          keyEnter.classList.add("playing");
           setTimeout(() => {
-            key.classList.remove("playing");
+            keyEnter.classList.remove("playing");
           }, 500);
 
-          currentlyPlayingAudio = sound;
-          currentlyPlayingKey = key;
-        }
+          currentlyPlayingAudio = audio;
+          currentlyPlayingKey = keyEnter;
+        });
       };
 
+      const desktop = function (e) {
+        //FOR DESKTOP
+        const sound = document.querySelector(`audio[data-key="${e.keyCode}"]`);
+        const key = document.querySelector(`[data-key="${e.keyCode}"]`);
+
+        if (currentlyPlayingAudio && currentlyPlayingAudio !== sound) {
+          currentlyPlayingAudio.pause();
+          currentlyPlayingAudio.currentTime = 0;
+        }
+
+        if (currentlyPlayingKey && currentlyPlayingKey !== key) {
+          currentlyPlayingKey.classList.remove("playing");
+        }
+
+        sound.play();
+        key.classList.add("playing");
+        setTimeout(() => {
+          key.classList.remove("playing");
+        }, 500);
+
+        currentlyPlayingAudio = sound;
+        currentlyPlayingKey = key;
+      };
       // screensize
       const screenSize = function () {
         return window.innerWidth >= 1024;
@@ -92,18 +117,18 @@
       // Function to handle event listeners based on screen size
       const updateEventListeners = function () {
         if (screenSize()) {
-          document.addEventListener("keydown", playSound);
-          document.removeEventListener("click", playSound);
+          document.addEventListener("keydown", desktop);
+          document.removeEventListener("click", mobile);
         } else {
-          document.removeEventListener("keydown", playSound);
-          document.addEventListener("click", playSound);
+          document.addEventListener("click", mobile);
+          document.removeEventListener("keydown", desktop);
         }
       };
 
       // Initial setup of event listeners
       updateEventListeners();
 
-      // Update event listeners on window resize
+      // // Update event listeners on window resize
       window.addEventListener("resize", updateEventListeners);
     </script>
   </body>
